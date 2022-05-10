@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+Route::get('/project', [ProjectsController::class,'index'])->middleware('auth');
+Route::get('/project/create', [ProjectsController::class,'create'])->middleware('auth');
+Route::post('/project', [ProjectsController::class,'store'])->middleware('auth');
+Route::get('/project/{project:name}', [ProjectsController::class,'show'])->middleware('auth');
+require __DIR__.'/auth.php';

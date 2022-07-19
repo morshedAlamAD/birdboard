@@ -50,18 +50,19 @@ class ProjectTest extends TestCase
         $this->post('/project', $attribute)->assertSessionHasErrors('description');
     }
     /**@test */
-    public function test_to_login_to_see_project()
+    public function test_only_the_author_can_see_project()
     {
+        $user=User::factory()->create();
+        $this->actingAs($user);
         $attribute=Project::factory()->create();
-        $this->get('/project')->assertRedirect('/login');
-        $this->get($attribute->path())->assertRedirect('/login');
+        $this->get($attribute->path())->assertStatus(403);
     }
     /**@test */
     public function test_loged_in_user_can_see_project()
     {
         $user=User::factory()->create();
         $this->actingAs($user);
-        $attribute=Project::factory()->create();
-        $this->get($attribute->path())->assertSee($attribute->title, $attribute->description);
+        $attribute=Project::factory()->create(['users_id'=>$user->id]);
+        $this->get($attribute->path())->assertSee($attribute->title);
     }
 }

@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    auth()->loginUsingId(5);
+    return redirect('/project');
 });
 
 Route::get('/dashboard', function () {

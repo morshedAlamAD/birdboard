@@ -14,7 +14,7 @@ class ProjectsController extends Controller
      */
     public function index(Project $project)
     {
-        $hello= $project::all();
+        $hello= auth()->user()->projects;
         return view('projects.index', compact('hello'));
     }
     /**
@@ -36,8 +36,8 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'=>'required|min:5',
-            'description'=>'required|min:30'
+            'title'=>'required',
+            'description'=>'required'
         ]);
         Project::create([
             'title'=>$request['title'],
@@ -56,7 +56,11 @@ class ProjectsController extends Controller
     public function show($id)
     {
         $project=Project::findOrFail($id);
-        return view('projects.show', [ 'project'=>$project ]);
+        if (auth()->user()->id == $project->users_id) {
+            return view('projects.show', [ 'project'=>$project ]);
+        } else {
+            return abort(403);
+        }
     }
 
     /**

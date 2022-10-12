@@ -17,4 +17,24 @@ class Project extends Model
     {
         return "/project/{$this->id}";
     }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function addTask($body)
+    {
+        // $this->createActivity('Task Added');
+        return $this->tasks()->create(compact('body'));
+    }
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+    public function createActivity($pram)
+    {
+         Activity::create([
+        "project_id"=> $this->id,
+        "description"=>$pram,
+        ]);
+    }
 }

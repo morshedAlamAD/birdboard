@@ -24,7 +24,7 @@ class User extends Authenticatable
     ];
     public function projects()
     {
-        return $this->hasMany(Project::class, 'users_id');
+        return $this->hasMany(Project::class, 'users_id')->latest('updated_at');
     }
 
     /**
@@ -32,6 +32,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -42,6 +43,7 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];

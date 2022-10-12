@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -33,17 +34,20 @@ class ProjectsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Project $project)
     {
-        $request->validate([
+        $att=$request->validate([
             'title'=>'required',
-            'description'=>'required'
+            'description'=>'required',
+            'note'=>'min:2'
         ]);
-        Project::create([
-            'title'=>$request['title'],
-            'users_id'=>auth()->user()->id,
-            'description' => $request['description']
-        ]);
+        //    dd($att);
+        auth()->user()->projects()->create($att);
+        // Project::create([
+        //     'title'=>$request['title'],
+        //     'users_id'=>auth()->user()->id,
+        //     'description' => $request['description']
+        // ]);
         return redirect('/project');
     }
 
@@ -53,14 +57,11 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Project $project)
     {
-        $project=Project::findOrFail($id);
-        if (auth()->user()->id == $project->users_id) {
-            return view('projects.show', [ 'project'=>$project ]);
-        } else {
-            return abort(403);
-        }
+        $this->authorize('update', $project);
+        $project=Project::findOrFail($project->id);
+        return view('projects.show', [ 'project'=>$project ]);
     }
 
     /**
@@ -69,9 +70,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        //
+        return view('projects.edit', compact('project'));
     }
 
     /**
@@ -81,9 +82,11 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $att=$request->validated();
+        $project->update($att);
+        return redirect($project->path());
     }
 
     /**

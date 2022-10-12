@@ -20,7 +20,8 @@ class ProjectFactory extends Factory
         return [
             'title'=> $this->faker->text(30),
             'users_id'=>User::factory()->create(),
-            'description'=>$this->faker->paragraph()
+            'description'=>$this->faker->paragraph(6),
+            'note'=>$this->faker->paragraph(10)
         ];
     }
 }

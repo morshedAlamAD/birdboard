@@ -11,18 +11,24 @@ class Task extends Model
     protected $guarded =[];
     protected $touches = ['project'];
     protected $casts = [
-        'completed'=> 'boolean'
+        'completed'=> 'boolean',
     ];
 
-       public static function boot() {
-            parent::boot();
-            static::created(function($task) {
-                $task->project->createActivity('Task Added');
-            });
-        }
+    /**
+     * boot
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+        static::created(function ($task) {
+            $task->project->createActivity('Task_Added');
+        });
+    }
     public function complete()
     {
-        $this->project->createActivity('Task Completed');
+        $this->project->createActivity('Task_Completed');
         return $this->update(['completed' => true]);
     }
     public function incomplete()

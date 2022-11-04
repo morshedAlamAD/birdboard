@@ -40,25 +40,34 @@
             </form>
             </div>
             <div class=" mb-5">
-            <h2 class="text-gray-500 text-lg py-4">General Notes</h2>
-            <form action="{{$project->path()}}" method="POST">
-                @csrf
-                @method('patch')
-                <textarea class="card-sm w-full h-52 border-none" name="note"> {{$project->note}}</textarea>
-                        @error('note')
-                            <p class=" text-xs text-red-600 font-bold">{{$message}}</p>
-                        @enderror
-                <input type="submit" class="button-blue -mt-3" placeholder="update">
-            </form>
+                <h2 class="text-gray-500 text-lg py-4">General Notes</h2>
+                <form action="{{$project->path()}}" method="POST">
+                    @csrf
+                    @method('patch')
+                    <textarea class="card-sm w-full h-52 border-none" name="note"> {{$project->note}}</textarea>
+                            @error('note')
+                                <p class=" text-xs text-red-600 font-bold">{{$message}}</p>
+                            @enderror
+                    <input type="submit" class="button-blue -mt-3" placeholder="update">
+                </form>
             </div>
         </div>
-        <div class="card w-1/4 h-52 mt-14 ">
+        <div class="flex flex-col w-1/4">
+        <div class="card w-full h-52 mt-14 ">
                 <a href="/project/{{$project->id}}">
                     <h1 class=" font-bold mb-6 text-xl text-gray-700 pl-4 border-l-4 -ml-4 py-2 border-blue-300">{{$project->title}}</h1>
                     <p class=" text-gray-500">{{Str::limit($project->description,100, '...')}}</p>
                 </a>
 
-            </div>
+        </div>
+        <div class="card w-full h-52 mt-5 ">
+            <ul>
+                @foreach ($project->activities as $items )
+                    <li>{{$items->description}}</li>
+                @endforeach
+            </ul>
+        </div>
+        </div>
 </div>
 </div>
 @endsection
